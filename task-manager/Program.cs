@@ -5,7 +5,6 @@ class Program
 {
     static async Task Main()
     {
-
         string connectionString = """
         Server=localhost;
         Database=TaskManagementDb;
@@ -19,7 +18,6 @@ class Program
 
         while (!exit)
         {
-
             Console.WriteLine("\nSelect one of the following actions(Enter a number):");
             Console.WriteLine("1. Add task");
             Console.WriteLine("2. Show all tasks");
@@ -32,7 +30,8 @@ class Program
             Console.WriteLine("9. Search tasks by title");
             Console.WriteLine("10. Display newest tasks first.");
             Console.WriteLine("11. Display oldest tasks first.");
-            Console.WriteLine("12. Exit");
+            Console.WriteLine("12. Replace Task.");
+            Console.WriteLine("13. Exit");
             Console.Write("Input: ");
             int choice = Validation.GetValidInputForNumber();
             switch (choice)
@@ -71,6 +70,9 @@ class Program
                     await taskService.ShowTasks("new");
                     break;
                 case 12:
+                    await taskService.ReplaceTask();
+                    break;
+                case 13:
                     exit = true;
                     Console.WriteLine("Program completion");
                     break;
@@ -78,10 +80,6 @@ class Program
                     Console.WriteLine("Invalid data entered. Please try again. ");
                     break;
             }
-
-
-
         }
-
     }
 }

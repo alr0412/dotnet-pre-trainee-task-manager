@@ -1,6 +1,7 @@
 class TaskService
 {
     private readonly ITaskRepository taskRepository;
+    
     public TaskService(ITaskRepository taskRep)
     {
         taskRepository = taskRep;
@@ -167,5 +168,30 @@ class TaskService
         }
     }
 
+    public async Task ReplaceTask()
+    {
+        Console.WriteLine("Enter the ID of the task you have completed");
+        Console.WriteLine("Imput: ");
+        int id = Validation.GetValidInputForNumber();
+        Console.WriteLine("Enter the task name");
+        string title = Validation.GetValidInputForString();
+        Console.WriteLine($"Enter a description of the task");
+        Console.Write("Input: ");
+        string? description = Console.ReadLine() ?? "";
+        Console.WriteLine("Select whether the task has been completed or not.");
+        bool isCompleted = Validation.GetValidInputForBool();
+        var task = new TaskItem(title, description, isCompleted);
+        int? newId = await taskRepository.ReplaceTaskAsync(id,task);
+        if (newId is null)
+        {
+            Console.WriteLine("Task not created");
+            return;
+        }
+        else
+        {
+            Console.WriteLine($"The task with the ID has been successfully completed, and a new one has been created with Id={newId}");
+            return;
+        }
+    }
 
 }

@@ -2,15 +2,16 @@ using Microsoft.Data.SqlClient;
 using Dapper;
 using System.ComponentModel;
 using System.Collections;
+using System.Data;
 
 public class TaskRepository : ITaskRepository
 {
     private readonly IDbConnectionFactory ConnectionFactory;
+
     public TaskRepository(IDbConnectionFactory connectionFactory)
     {
         ConnectionFactory = connectionFactory;
     }
-
 
     public async Task<int> CreateAsync(TaskItem task)
     {
@@ -22,7 +23,6 @@ public class TaskRepository : ITaskRepository
             """;
         int newTaskId = await connection.QuerySingleAsync<int>(sql, task);
         return newTaskId;
-
     }
 
     public async Task<bool> DeleteAsync(int id)
@@ -121,4 +121,37 @@ public class TaskRepository : ITaskRepository
         return response;
     }
 
+    public async Task<int?> ReplaceTaskAsync(int id, TaskItem task)
+    {
+        await using var connection = await ConnectionFactory.CreateConnection();
+        await using var transaction = await connection.BeginTransactionAsync();
+        int? newId = null;
+        try
+        {
+            const string updateSql = """
+            UPDATE Tasks SET IsCompleted=1
+            WHERE Id=@id
+            """;
+            int update=await connection.ExecuteAsync(updateSql, new { id },transaction);
+            if (update == 0)
+            {
+                await transaction.RollbackAsync();
+                return null;
+            }
+
+            const string insertSql = """
+            INSERT INTO Tasks(Title,Description,IsCompleted,CreatedAt)
+            OUTPUT INSERTED.Id
+            VALUES(@Title,@Description,@IsCompleted,@CreatedAt);
+            """;
+            newId = await connection.QuerySingleAsync<int>(insertSql, task,transaction);
+            await transaction.CommitAsync();
+        }
+        catch (System.Exception)
+        {
+            await transaction.RollbackAsync();
+            return null;
+        }
+        return newId;
+    }
 }
