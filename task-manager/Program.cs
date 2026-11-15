@@ -27,7 +27,8 @@ class Program
             Console.WriteLine("6. Delete task");
             Console.WriteLine("7. Show completed tasks");
             Console.WriteLine("8. Show incompleted tasks");
-            Console.WriteLine("9. Exit");
+            Console.WriteLine("9. Search tasks by title");
+            Console.WriteLine("10. Exit");
             Console.Write("Input: ");
             int choice = Validation.GetValidInputForNumber();
             switch (choice)
@@ -39,7 +40,7 @@ class Program
                     await taskService.ShowTasks("all");
                     break;
                 case 3:
-                    await taskService.FindTaskById();
+                    await taskService.FindTaskBy("id");
                     break;
                 case 4:
                     await taskService.UpdateTask();
@@ -57,6 +58,9 @@ class Program
                     await taskService.ShowTasks("incompleted");
                     break;
                 case 9:
+                    await taskService.FindTaskBy("title");
+                    break;
+                case 10:
                     exit = true;
                     Console.WriteLine("Program completion");
                     break;

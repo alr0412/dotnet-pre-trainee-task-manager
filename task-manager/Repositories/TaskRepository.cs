@@ -106,5 +106,19 @@ public class TaskRepository : ITaskRepository
         var response = await connection.QueryAsync<TaskItem>(sql,new {completed});
         return response ;
     }
+
+    public async Task<TaskItem?> GetByTitle(string Title)
+    {
+        await using var connection = new SqlConnection(ConnectionString);
+        await connection.OpenAsync();
+
+        const string sql = """
+            SELECT Id, Title,Description, IsCompleted
+            FROM Tasks
+            WHERE Title=@Title
+            """;
+        var response = await connection.QuerySingleOrDefaultAsync<TaskItem>(sql, new { Title });
+        return response;
+    }
     
 }

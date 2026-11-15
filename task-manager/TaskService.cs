@@ -25,28 +25,28 @@ class TaskService
         else
         {
             Console.WriteLine($"Task created with ID={id}");
-            return ;
+            return;
         }
     }
 
     public async Task ShowTasks(string type)
     {
-        IEnumerable<TaskItem> tasks= Enumerable.Empty<TaskItem>();
+        IEnumerable<TaskItem> tasks = Enumerable.Empty<TaskItem>();
         switch (type)
         {
-            case "all": 
-             tasks = await taskRepository.GetAllAsync();
+            case "all":
+                tasks = await taskRepository.GetAllAsync();
                 break;
-            case "completed": 
-             tasks = await taskRepository.GetCompletedAsync(1);
+            case "completed":
+                tasks = await taskRepository.GetCompletedAsync(1);
                 break;
-            case "incompleted": 
-             tasks = await taskRepository.GetCompletedAsync(0);
+            case "incompleted":
+                tasks = await taskRepository.GetCompletedAsync(0);
                 break;
             default:
                 return;
         }
-        
+
         if (!tasks.Any())
         {
             Console.WriteLine("The database is empty");
@@ -59,12 +59,27 @@ class TaskService
         }
     }
 
-    public async Task FindTaskById()
+    public async Task FindTaskBy(string type)
     {
-        Console.WriteLine("Enter the ID of the task you are interested in");
-        Console.WriteLine("Imput: ");
-        int id = Validation.GetValidInputForNumber();
-        TaskItem? task = await taskRepository.GetByIdAsync(id);
+        var task = new TaskItem();
+        switch (type)
+        {
+            case "id":
+                Console.WriteLine("Enter the ID of the task you are interested in");
+                Console.WriteLine("Imput: ");
+                int id = Validation.GetValidInputForNumber();
+                task = await taskRepository.GetByIdAsync(id);
+                break;
+            case "title":
+                Console.WriteLine("Enter the title of the task you are interested in");
+                Console.WriteLine("Imput: ");
+                string title= Validation.GetValidInputForString();
+                task = await taskRepository.GetByTitle(title);
+                break;
+            default:
+                return;
+        }
+
         if (task is null)
         {
             Console.WriteLine("Task not found");
@@ -124,7 +139,7 @@ class TaskService
     {
         Console.WriteLine("Enter the ID of the task you want to update.");
         Console.Write("Input: ");
-        int id=Validation.GetValidInputForNumber();
+        int id = Validation.GetValidInputForNumber();
         Console.WriteLine("Enter the new task name");
         string title = Validation.GetValidInputForString();
         Console.WriteLine("Enter a new description of the task");
@@ -132,16 +147,17 @@ class TaskService
         string? description = Console.ReadLine();
         Console.WriteLine("Select whether the task has been completed or not.");
         bool isCompleted = Validation.GetValidInputForBool();
-        var task = new TaskItem(id,title, description, isCompleted);
+        var task = new TaskItem(id, title, description, isCompleted);
         bool isUpdate = await taskRepository.UpdateAsync(task);
-        if (!isUpdate){
+        if (!isUpdate)
+        {
             Console.WriteLine("The task did not update. Please double-check the values ​​:(");
             return;
         }
         else
         {
             Console.WriteLine("The task was successfully updated.");
-            return ;
+            return;
         }
     }
 

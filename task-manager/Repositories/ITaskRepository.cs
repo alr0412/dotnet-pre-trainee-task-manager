@@ -7,6 +7,7 @@ interface ITaskRepository
     public Task<bool> CompleteAsync(int id);
     public Task<bool> DeleteAsync(int id); 
     public Task<IEnumerable<TaskItem>> GetCompletedAsync(int completed); 
+    public  Task<TaskItem?> GetByTitle(string Title);
  
 
 }
