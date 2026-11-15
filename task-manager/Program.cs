@@ -28,7 +28,9 @@ class Program
             Console.WriteLine("7. Show completed tasks");
             Console.WriteLine("8. Show incompleted tasks");
             Console.WriteLine("9. Search tasks by title");
-            Console.WriteLine("10. Exit");
+            Console.WriteLine("10. Display newest tasks first.");
+            Console.WriteLine("11. Display oldest tasks first.");
+            Console.WriteLine("12. Exit");
             Console.Write("Input: ");
             int choice = Validation.GetValidInputForNumber();
             switch (choice)
@@ -61,6 +63,12 @@ class Program
                     await taskService.FindTaskBy("title");
                     break;
                 case 10:
+                    await taskService.ShowTasks("old");
+                    break;
+                case 11:
+                    await taskService.ShowTasks("new");
+                    break;
+                case 12:
                     exit = true;
                     Console.WriteLine("Program completion");
                     break;

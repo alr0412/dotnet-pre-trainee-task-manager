@@ -93,7 +93,7 @@ public class TaskRepository : ITaskRepository
         return affectedRows > 0;
     }
 
-    public async Task<IEnumerable<TaskItem>>  GetCompletedAsync(int completed)
+    public async Task<IEnumerable<TaskItem>> GetCompletedAsync(int completed)
     {
         await using var connection = new SqlConnection(ConnectionString);
         await connection.OpenAsync();
@@ -103,8 +103,8 @@ public class TaskRepository : ITaskRepository
             FROM Tasks
             WHERE IsCompleted=@completed
             """;
-        var response = await connection.QueryAsync<TaskItem>(sql,new {completed});
-        return response ;
+        var response = await connection.QueryAsync<TaskItem>(sql, new { completed });
+        return response;
     }
 
     public async Task<TaskItem?> GetByTitle(string Title)
@@ -120,5 +120,20 @@ public class TaskRepository : ITaskRepository
         var response = await connection.QuerySingleOrDefaultAsync<TaskItem>(sql, new { Title });
         return response;
     }
-    
+
+    public async Task<IEnumerable<TaskItem>> GetAllByDateAsync(string type)
+    {
+        await using var connection = new SqlConnection(ConnectionString);
+        await connection.OpenAsync();
+        string sort = type == "ASC" ? "ASC" : "DESC";
+
+        string sql = $"""
+            SELECT Id, Title, Description, IsCompleted, CreatedAt
+            FROM Tasks
+            ORDER BY CreatedAt {sort};
+            """;
+        var response = await connection.QueryAsync<TaskItem>(sql);
+        return response;
+    }
+
 }

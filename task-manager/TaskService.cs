@@ -12,7 +12,7 @@ class TaskService
         string title = Validation.GetValidInputForString();
         Console.WriteLine($"Enter a description of the task");
         Console.Write("Input: ");
-        string? description = Console.ReadLine();
+        string? description = Console.ReadLine() ?? "";
         Console.WriteLine("Select whether the task has been completed or not.");
         bool isCompleted = Validation.GetValidInputForBool();
         var task = new TaskItem(title, description, isCompleted);
@@ -42,6 +42,12 @@ class TaskService
                 break;
             case "incompleted":
                 tasks = await taskRepository.GetCompletedAsync(0);
+                break;
+            case "new":
+                tasks = await taskRepository.GetAllByDateAsync("DESC");
+                break;
+            case "old":
+                tasks = await taskRepository.GetAllByDateAsync("ASC");
                 break;
             default:
                 return;
@@ -73,7 +79,7 @@ class TaskService
             case "title":
                 Console.WriteLine("Enter the title of the task you are interested in");
                 Console.WriteLine("Imput: ");
-                string title= Validation.GetValidInputForString();
+                string title = Validation.GetValidInputForString();
                 task = await taskRepository.GetByTitle(title);
                 break;
             default:
@@ -144,7 +150,7 @@ class TaskService
         string title = Validation.GetValidInputForString();
         Console.WriteLine("Enter a new description of the task");
         Console.Write("Input: ");
-        string? description = Console.ReadLine();
+        string? description = Console.ReadLine() ?? "";
         Console.WriteLine("Select whether the task has been completed or not.");
         bool isCompleted = Validation.GetValidInputForBool();
         var task = new TaskItem(id, title, description, isCompleted);
