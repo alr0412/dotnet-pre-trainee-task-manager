@@ -5,18 +5,16 @@ using System.Collections;
 
 public class TaskRepository : ITaskRepository
 {
-    private readonly string ConnectionString;
-    public TaskRepository(string connectionString)
+    private readonly IDbConnectionFactory ConnectionFactory;
+    public TaskRepository(IDbConnectionFactory connectionFactory)
     {
-        ConnectionString = connectionString;
+        ConnectionFactory = connectionFactory;
     }
 
 
     public async Task<int> CreateAsync(TaskItem task)
     {
-        await using var connection = new SqlConnection(ConnectionString);
-        await connection.OpenAsync();
-
+        await using var connection = await ConnectionFactory.CreateConnection();
         const string sql = """
             INSERT INTO Tasks(Title,Description,IsCompleted,CreatedAt)
             OUTPUT INSERTED.Id
@@ -29,8 +27,7 @@ public class TaskRepository : ITaskRepository
 
     public async Task<bool> DeleteAsync(int id)
     {
-        await using var connection = new SqlConnection(ConnectionString);
-        await connection.OpenAsync();
+        await using var connection = await ConnectionFactory.CreateConnection();
         const string sql = """
             DELETE FROM Tasks 
             WHERE Id=@Id
@@ -41,9 +38,7 @@ public class TaskRepository : ITaskRepository
 
     public async Task<IEnumerable<TaskItem>> GetAllAsync()
     {
-        await using var connection = new SqlConnection(ConnectionString);
-        await connection.OpenAsync();
-
+        await using var connection = await ConnectionFactory.CreateConnection();
         const string sql = """
             SELECT Id, Title, Description, IsCompleted, CreatedAt
             FROM Tasks
@@ -54,9 +49,7 @@ public class TaskRepository : ITaskRepository
 
     public async Task<TaskItem?> GetByIdAsync(int id)
     {
-        await using var connection = new SqlConnection(ConnectionString);
-        await connection.OpenAsync();
-
+        await using var connection = await ConnectionFactory.CreateConnection();
         const string sql = """
             SELECT Id, Title, IsCompleted
             FROM Tasks
@@ -68,8 +61,7 @@ public class TaskRepository : ITaskRepository
 
     public async Task<bool> UpdateAsync(TaskItem task)
     {
-        await using var connection = new SqlConnection(ConnectionString);
-        await connection.OpenAsync();
+        await using var connection = await ConnectionFactory.CreateConnection();
         const string sql = """
             UPDATE Tasks SET 
             Description=@Description,
@@ -82,9 +74,7 @@ public class TaskRepository : ITaskRepository
     }
     public async Task<bool> CompleteAsync(int id)
     {
-        await using var connection = new SqlConnection(ConnectionString);
-        await connection.OpenAsync();
-
+        await using var connection = await ConnectionFactory.CreateConnection();
         const string sql = """
             UPDATE Tasks SET IsCompleted=1
             WHERE Id=@id
@@ -95,9 +85,7 @@ public class TaskRepository : ITaskRepository
 
     public async Task<IEnumerable<TaskItem>> GetCompletedAsync(int completed)
     {
-        await using var connection = new SqlConnection(ConnectionString);
-        await connection.OpenAsync();
-
+        await using var connection = await ConnectionFactory.CreateConnection();
         const string sql = """
             SELECT Id, Title, IsCompleted
             FROM Tasks
@@ -109,9 +97,7 @@ public class TaskRepository : ITaskRepository
 
     public async Task<TaskItem?> GetByTitle(string Title)
     {
-        await using var connection = new SqlConnection(ConnectionString);
-        await connection.OpenAsync();
-
+        await using var connection = await ConnectionFactory.CreateConnection();
         const string sql = """
             SELECT Id, Title,Description, IsCompleted
             FROM Tasks
@@ -123,8 +109,7 @@ public class TaskRepository : ITaskRepository
 
     public async Task<IEnumerable<TaskItem>> GetAllByDateAsync(string type)
     {
-        await using var connection = new SqlConnection(ConnectionString);
-        await connection.OpenAsync();
+        await using var connection = await ConnectionFactory.CreateConnection();
         string sort = type == "ASC" ? "ASC" : "DESC";
 
         string sql = $"""

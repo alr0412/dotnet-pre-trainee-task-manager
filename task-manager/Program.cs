@@ -5,13 +5,15 @@ class Program
 {
     static async Task Main()
     {
+
         string connectionString = """
         Server=localhost;
         Database=TaskManagementDb;
         Integrated Security=True;
         TrustServerCertificate=True;
         """;
-        var taskRepository = new TaskRepository(connectionString);
+        var connectionFactory = new SqlConnectionFactory(connectionString);
+        var taskRepository = new TaskRepository(connectionFactory);
         var taskService = new TaskService(taskRepository);
         bool exit = false;
 
