@@ -1,6 +1,7 @@
 using Microsoft.Data.SqlClient;
 using Dapper;
 using System.ComponentModel;
+using System.Collections;
 
 public class TaskRepository : ITaskRepository
 {
@@ -57,7 +58,7 @@ public class TaskRepository : ITaskRepository
         await connection.OpenAsync();
 
         const string sql = """
-            SELECT Id, Title, Description, IsCompleted, CreatedAt
+            SELECT Id, Title, IsCompleted
             FROM Tasks
             WHERE Id=@id
             """;
@@ -90,6 +91,20 @@ public class TaskRepository : ITaskRepository
             """;
         var affectedRows = await connection.ExecuteAsync(sql, new { id });
         return affectedRows > 0;
+    }
+
+    public async Task<IEnumerable<TaskItem>>  GetCompletedAsync(int completed)
+    {
+        await using var connection = new SqlConnection(ConnectionString);
+        await connection.OpenAsync();
+
+        const string sql = """
+            SELECT Id, Title, IsCompleted
+            FROM Tasks
+            WHERE IsCompleted=@completed
+            """;
+        var response = await connection.QueryAsync<TaskItem>(sql,new {completed});
+        return response ;
     }
     
 }

@@ -29,10 +29,25 @@ class TaskService
         }
     }
 
-    public async Task ShowAll()
+    public async Task ShowTasks(string type)
     {
-        var tasks = await taskRepository.GetAllAsync();
-        if (tasks is null)
+        IEnumerable<TaskItem> tasks= Enumerable.Empty<TaskItem>();
+        switch (type)
+        {
+            case "all": 
+             tasks = await taskRepository.GetAllAsync();
+                break;
+            case "completed": 
+             tasks = await taskRepository.GetCompletedAsync(1);
+                break;
+            case "incompleted": 
+             tasks = await taskRepository.GetCompletedAsync(0);
+                break;
+            default:
+                return;
+        }
+        
+        if (!tasks.Any())
         {
             Console.WriteLine("The database is empty");
             return;
@@ -129,4 +144,6 @@ class TaskService
             return ;
         }
     }
+
+
 }
