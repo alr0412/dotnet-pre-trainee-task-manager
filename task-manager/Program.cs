@@ -31,7 +31,8 @@ class Program
             Console.WriteLine("10. Display newest tasks first.");
             Console.WriteLine("11. Display oldest tasks first.");
             Console.WriteLine("12. Replace Task.");
-            Console.WriteLine("13. Exit");
+            Console.WriteLine("13. Task search.");
+            Console.WriteLine("14. Exit");
             Console.Write("Input: ");
             int choice = Validation.GetValidInputForNumber();
             switch (choice)
@@ -73,6 +74,9 @@ class Program
                     await taskService.ReplaceTask();
                     break;
                 case 13:
+                    await taskService.Search();
+                    break;
+                case 14:
                     exit = true;
                     Console.WriteLine("Program completion");
                     break;

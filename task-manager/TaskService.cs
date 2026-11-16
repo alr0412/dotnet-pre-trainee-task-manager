@@ -9,7 +9,7 @@ class TaskService
 
     public async Task CreateTask()
     {
-        Console.WriteLine("Enter the task name");
+        Console.WriteLine("\nEnter the task name");
         string title = Validation.GetValidInputForString();
         Console.WriteLine($"Enter a description of the task");
         Console.Write("Input: ");
@@ -72,13 +72,13 @@ class TaskService
         switch (type)
         {
             case "id":
-                Console.WriteLine("Enter the ID of the task you are interested in");
+                Console.WriteLine("\nEnter the ID of the task you are interested in");
                 Console.WriteLine("Imput: ");
                 int id = Validation.GetValidInputForNumber();
                 task = await taskRepository.GetByIdAsync(id);
                 break;
             case "title":
-                Console.WriteLine("Enter the title of the task you are interested in");
+                Console.WriteLine("\nEnter the title of the task you are interested in");
                 Console.WriteLine("Imput: ");
                 string title = Validation.GetValidInputForString();
                 task = await taskRepository.GetByTitle(title);
@@ -101,7 +101,7 @@ class TaskService
 
     public async Task CompleteTask()
     {
-        Console.WriteLine("Enter the ID of the task you have completed");
+        Console.WriteLine("\nEnter the ID of the task you have completed");
         Console.WriteLine("Imput: ");
         int id = Validation.GetValidInputForNumber();
         bool response = await taskRepository.CompleteAsync(id);
@@ -119,7 +119,7 @@ class TaskService
 
     public async Task DeleteTask()
     {
-        Console.WriteLine("Enter the ID of the task you want to delete");
+        Console.WriteLine("\nEnter the ID of the task you want to delete");
         Console.WriteLine("Imput: ");
         int id = Validation.GetValidInputForNumber();
         Console.WriteLine("Are you sure?");
@@ -144,7 +144,7 @@ class TaskService
 
     public async Task UpdateTask()
     {
-        Console.WriteLine("Enter the ID of the task you want to update.");
+        Console.WriteLine("\nEnter the ID of the task you want to update.");
         Console.Write("Input: ");
         int id = Validation.GetValidInputForNumber();
         Console.WriteLine("Enter the new task name");
@@ -170,7 +170,7 @@ class TaskService
 
     public async Task ReplaceTask()
     {
-        Console.WriteLine("Enter the ID of the task you have completed");
+        Console.WriteLine("\nEnter the ID of the task you have completed");
         Console.WriteLine("Imput: ");
         int id = Validation.GetValidInputForNumber();
         Console.WriteLine("Enter the task name");
@@ -193,5 +193,26 @@ class TaskService
             return;
         }
     }
+
+    public async Task Search()
+    {
+        Console.WriteLine("\nEnter the task name");
+        Console.WriteLine("Imput: ");
+        string searchText=Validation.GetValidInputForString();
+        var tasks=await taskRepository.SearchAsync(searchText);
+        
+        if (!tasks.Any())
+        {
+            Console.WriteLine("Nothing found");
+            return;
+        }
+        else
+        {
+            foreach (var task in tasks)
+                Console.WriteLine($"{task.Id}: {task.Title} |Description: {task.Description} |Completed: {task.IsCompleted}");
+        }
+    }
+
+    
 
 }

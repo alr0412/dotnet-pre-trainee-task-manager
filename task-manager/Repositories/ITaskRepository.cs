@@ -9,5 +9,6 @@ interface ITaskRepository
     public Task<IEnumerable<TaskItem>> GetCompletedAsync(int completed);
     public Task<TaskItem?> GetByTitle(string Title);
     public Task<IEnumerable<TaskItem>> GetAllByDateAsync(string type);
-    public Task<int?> ReplaceTaskAsync(int id,TaskItem task);
+    public Task<int?> ReplaceTaskAsync(int id, TaskItem task);
+    public Task<IEnumerable<TaskItem>> SearchAsync(string searchText);
 }

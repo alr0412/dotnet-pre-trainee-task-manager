@@ -154,4 +154,17 @@ public class TaskRepository : ITaskRepository
         }
         return newId;
     }
+
+    public async Task<IEnumerable<TaskItem>> SearchAsync(string searchText)
+    {
+        await using var connection = await ConnectionFactory.CreateConnection();
+        string search='%'+searchText+'%';
+        string sql = """
+            SELECT Id, Title, Description, IsCompleted, CreatedAt
+            FROM Tasks
+            WHERE Title LIKE @search
+            """;
+        var response = await connection.QueryAsync<TaskItem>(sql, new{search});
+        return response;
+    }
 }
