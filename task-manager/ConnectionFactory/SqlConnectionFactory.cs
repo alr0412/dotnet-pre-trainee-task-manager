@@ -1,6 +1,5 @@
 using Microsoft.Data.SqlClient;
-
-class SqlConnectionFactory : IDbConnectionFactory
+public class SqlConnectionFactory : IDbConnectionFactory
 {
     private readonly string ConnectingString;
     public SqlConnectionFactory(string connectingString)

@@ -51,7 +51,7 @@ public class TaskRepository : ITaskRepository
     {
         await using var connection = await ConnectionFactory.CreateConnectionAsync();
         const string sql = """
-            SELECT Id, Title, IsCompleted
+            SELECT Id, Title, Description, IsCompleted, CreatedAt
             FROM Tasks
             WHERE Id=@id
             """;
@@ -99,7 +99,7 @@ public class TaskRepository : ITaskRepository
     {
         await using var connection = await ConnectionFactory.CreateConnectionAsync();
         const string sql = """
-            SELECT Id, Title,Description, IsCompleted
+            SELECT Id, Title, Description, IsCompleted, CreatedAt
             FROM Tasks
             WHERE Title=@Title
             """;

@@ -35,54 +35,66 @@ class Program
             Console.WriteLine("14. Exit");
             Console.Write("Input: ");
             int choice = Validation.GetValidInputForNumber();
-            switch (choice)
+            try
             {
-                case 1:
-                    await taskService.CreateTask();
-                    break;
-                case 2:
-                    await taskService.ShowTasks("all");
-                    break;
-                case 3:
-                    await taskService.FindTaskBy("id");
-                    break;
-                case 4:
-                    await taskService.UpdateTask();
-                    break;
-                case 5:
-                    await taskService.CompleteTask();
-                    break;
-                case 6:
-                    await taskService.DeleteTask();
-                    break;
-                case 7:
-                    await taskService.ShowTasks("completed");
-                    break;
-                case 8:
-                    await taskService.ShowTasks("incompleted");
-                    break;
-                case 9:
-                    await taskService.FindTaskBy("title");
-                    break;
-                case 10:
-                    await taskService.ShowTasks("new");
-                    break;
-                case 11:
-                    await taskService.ShowTasks("old");
-                    break;
-                case 12:
-                    await taskService.ReplaceTask();
-                    break;
-                case 13:
-                    await taskService.Search();
-                    break;
-                case 14:
-                    exit = true;
-                    Console.WriteLine("Program completion");
-                    break;
-                default:
-                    Console.WriteLine("Invalid data entered. Please try again. ");
-                    break;
+                switch (choice)
+                {
+                    case 1:
+                        await taskService.CreateTask();
+                        break;
+                    case 2:
+                        await taskService.ShowTasks("all");
+                        break;
+                    case 3:
+                        await taskService.FindTaskBy("id");
+                        break;
+                    case 4:
+                        await taskService.UpdateTask();
+                        break;
+                    case 5:
+                        await taskService.CompleteTask();
+                        break;
+                    case 6:
+                        await taskService.DeleteTask();
+                        break;
+                    case 7:
+                        await taskService.ShowTasks("completed");
+                        break;
+                    case 8:
+                        await taskService.ShowTasks("incompleted");
+                        break;
+                    case 9:
+                        await taskService.FindTaskBy("title");
+                        break;
+                    case 10:
+                        await taskService.ShowTasks("new");
+                        break;
+                    case 11:
+                        await taskService.ShowTasks("old");
+                        break;
+                    case 12:
+                        await taskService.ReplaceTask();
+                        break;
+                    case 13:
+                        await taskService.Search();
+                        break;
+                    case 14:
+                        exit = true;
+                        Console.WriteLine("Program completion");
+                        break;
+                    default:
+                        Console.WriteLine("Invalid data entered. Please try again. ");
+                        break;
+                }
+            }
+            catch (Microsoft.Data.SqlClient.SqlException ex)
+            {
+                Console.WriteLine($"\nDatabase error: {ex.Message}");
+                Console.WriteLine("Please check the connection to SQL Server.");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"\nAn error occurred: {ex.Message}");
             }
         }
     }
