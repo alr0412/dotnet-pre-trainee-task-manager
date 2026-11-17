@@ -139,6 +139,7 @@ class TaskService
                 return;
             }
         }
+        else Console.WriteLine("Deletion cancelled.");
 
     }
 

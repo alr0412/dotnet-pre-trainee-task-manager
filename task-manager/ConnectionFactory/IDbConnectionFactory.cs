@@ -2,5 +2,5 @@ using Microsoft.Data.SqlClient;
 
 public interface IDbConnectionFactory
 {
-    public Task<SqlConnection> CreateConnection();
+    public Task<SqlConnection> CreateConnectionAsync();
 }

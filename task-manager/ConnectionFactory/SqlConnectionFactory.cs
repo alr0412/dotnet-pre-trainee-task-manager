@@ -7,7 +7,7 @@ class SqlConnectionFactory : IDbConnectionFactory
     {
         ConnectingString = connectingString;
     }
-    public async Task<SqlConnection> CreateConnection()
+    public async Task<SqlConnection> CreateConnectionAsync()
     {
         var connection = new SqlConnection(ConnectingString);
         await connection.OpenAsync();

@@ -65,10 +65,10 @@ class Program
                     await taskService.FindTaskBy("title");
                     break;
                 case 10:
-                    await taskService.ShowTasks("old");
+                    await taskService.ShowTasks("new");
                     break;
                 case 11:
-                    await taskService.ShowTasks("new");
+                    await taskService.ShowTasks("old");
                     break;
                 case 12:
                     await taskService.ReplaceTask();

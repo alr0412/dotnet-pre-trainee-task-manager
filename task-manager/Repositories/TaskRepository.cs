@@ -15,7 +15,7 @@ public class TaskRepository : ITaskRepository
 
     public async Task<int> CreateAsync(TaskItem task)
     {
-        await using var connection = await ConnectionFactory.CreateConnection();
+        await using var connection = await ConnectionFactory.CreateConnectionAsync();
         const string sql = """
             INSERT INTO Tasks(Title,Description,IsCompleted,CreatedAt)
             OUTPUT INSERTED.Id
@@ -27,7 +27,7 @@ public class TaskRepository : ITaskRepository
 
     public async Task<bool> DeleteAsync(int id)
     {
-        await using var connection = await ConnectionFactory.CreateConnection();
+        await using var connection = await ConnectionFactory.CreateConnectionAsync();
         const string sql = """
             DELETE FROM Tasks 
             WHERE Id=@Id
@@ -38,7 +38,7 @@ public class TaskRepository : ITaskRepository
 
     public async Task<IEnumerable<TaskItem>> GetAllAsync()
     {
-        await using var connection = await ConnectionFactory.CreateConnection();
+        await using var connection = await ConnectionFactory.CreateConnectionAsync();
         const string sql = """
             SELECT Id, Title, Description, IsCompleted, CreatedAt
             FROM Tasks
@@ -49,7 +49,7 @@ public class TaskRepository : ITaskRepository
 
     public async Task<TaskItem?> GetByIdAsync(int id)
     {
-        await using var connection = await ConnectionFactory.CreateConnection();
+        await using var connection = await ConnectionFactory.CreateConnectionAsync();
         const string sql = """
             SELECT Id, Title, IsCompleted
             FROM Tasks
@@ -61,7 +61,7 @@ public class TaskRepository : ITaskRepository
 
     public async Task<bool> UpdateAsync(TaskItem task)
     {
-        await using var connection = await ConnectionFactory.CreateConnection();
+        await using var connection = await ConnectionFactory.CreateConnectionAsync();
         const string sql = """
             UPDATE Tasks SET 
             Description=@Description,
@@ -74,7 +74,7 @@ public class TaskRepository : ITaskRepository
     }
     public async Task<bool> CompleteAsync(int id)
     {
-        await using var connection = await ConnectionFactory.CreateConnection();
+        await using var connection = await ConnectionFactory.CreateConnectionAsync();
         const string sql = """
             UPDATE Tasks SET IsCompleted=1
             WHERE Id=@id
@@ -85,7 +85,7 @@ public class TaskRepository : ITaskRepository
 
     public async Task<IEnumerable<TaskItem>> GetCompletedAsync(int completed)
     {
-        await using var connection = await ConnectionFactory.CreateConnection();
+        await using var connection = await ConnectionFactory.CreateConnectionAsync();
         const string sql = """
             SELECT Id, Title, IsCompleted
             FROM Tasks
@@ -97,7 +97,7 @@ public class TaskRepository : ITaskRepository
 
     public async Task<TaskItem?> GetByTitle(string Title)
     {
-        await using var connection = await ConnectionFactory.CreateConnection();
+        await using var connection = await ConnectionFactory.CreateConnectionAsync();
         const string sql = """
             SELECT Id, Title,Description, IsCompleted
             FROM Tasks
@@ -109,7 +109,7 @@ public class TaskRepository : ITaskRepository
 
     public async Task<IEnumerable<TaskItem>> GetAllByDateAsync(string type)
     {
-        await using var connection = await ConnectionFactory.CreateConnection();
+        await using var connection = await ConnectionFactory.CreateConnectionAsync();
         string sort = type == "ASC" ? "ASC" : "DESC";
 
         string sql = $"""
@@ -123,7 +123,7 @@ public class TaskRepository : ITaskRepository
 
     public async Task<int?> ReplaceTaskAsync(int id, TaskItem task)
     {
-        await using var connection = await ConnectionFactory.CreateConnection();
+        await using var connection = await ConnectionFactory.CreateConnectionAsync();
         await using var transaction = await connection.BeginTransactionAsync();
         int? newId = null;
         try
@@ -157,7 +157,7 @@ public class TaskRepository : ITaskRepository
 
     public async Task<IEnumerable<TaskItem>> SearchAsync(string searchText)
     {
-        await using var connection = await ConnectionFactory.CreateConnection();
+        await using var connection = await ConnectionFactory.CreateConnectionAsync();
         string search='%'+searchText+'%';
         string sql = """
             SELECT Id, Title, Description, IsCompleted, CreatedAt
