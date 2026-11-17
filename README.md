@@ -56,6 +56,7 @@ TrustServerCertificate=True;
 """;
 ```
 If your SQL Server instance uses a different name (e.g., `localhost\SQLEXPRESS`), update the connection string accordingly.
+
 5. Restore dependencies and run the project.
 
 ## Project Structure
